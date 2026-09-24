@@ -18,7 +18,7 @@ PS_URL="https://${ANYPOINT_HOST}/runtimefabric/api/organizations/${ANYPOINT_ORG_
 echo "==> [1/4] Authenticating with Anypoint Platform..."
 
 TOKEN_RESPONSE=$(curl -sS -X POST \
-  "https://${ANYPOINT_HOST}/accounts/api/v2/oauth2/token" \
+  "https://${ANYPOINT_HOST}/accounts/login" \
   -H "Content-Type: application/json" \
   -d "{
     \"username\": \"${ANYPOINT_USERNAME}\",
