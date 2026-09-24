@@ -13,10 +13,10 @@ jobs:
 
       - name: Run Network Drop Script
         env:
-          USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
-          PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
-          ORG_ID: ${{ secrets.ANYPOINT_ORG_ID }}
-          PRIVATE_SPACE_ID: ${{ secrets.ANYPOINT_PRIVATE_SPACE_ID }}
+          ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
+          ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
+          ANYPOINT_ORG_ID: ${{ secrets.ANYPOINT_ORG_ID }}
+          ANYPOINT_PRIVATE_SPACE_ID: ${{ secrets.ANYPOINT_PRIVATE_SPACE_ID }}
         run: |
           chmod +x ./scripts/kill_switch.sh
           ./scripts/kill_switch.sh
