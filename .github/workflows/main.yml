@@ -1,0 +1,22 @@
+name: CloudHub 2.0 Emergency Ingress Kill Switch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  engage-kill-switch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Network Drop Script
+        env:
+          USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
+          PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
+          ORG_ID: ${{ secrets.ANYPOINT_ORG_ID }}
+          PRIVATE_SPACE_ID: ${{ secrets.ANYPOINT_PRIVATE_SPACE_ID }}
+        run: |
+          chmod +x ./scripts/kill_switch.sh
+          ./scripts/kill_switch.sh
