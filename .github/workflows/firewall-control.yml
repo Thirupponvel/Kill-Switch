@@ -1,0 +1,50 @@
+name: CloudHub 2.0 Firewall Control
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Select firewall operation"
+        required: true
+        type: choice
+        options:
+          - normal
+          - kill-switch
+
+jobs:
+  firewall-control:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+      - name: Execute Firewall Control
+        env:
+          ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
+          ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
+          ANYPOINT_ORG_ID: ${{ secrets.ANYPOINT_ORG_ID }}
+          ANYPOINT_PRIVATE_SPACE_ID: ${{ secrets.ANYPOINT_PRIVATE_SPACE_ID }}
+        run: |
+          chmod +x scripts/firewall_switch.sh
+
+          ./scripts/firewall_switch.sh "${{ inputs.mode }}"
+
+      # --------------------------------------------------------
+      # Upload backup ONLY when kill-switch is selected
+      # --------------------------------------------------------
+
+      - name: Upload Kill-Switch Backup
+        if: ${{ inputs.mode == 'kill-switch' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: firewall-backup-${{ github.run_number }}
+          path: backups/
+          retention-days: 90
