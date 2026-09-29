@@ -1,0 +1,39 @@
+{
+  "firewallRules": [
+    {
+      "cidrBlock": "0.0.0.0/0",
+      "protocol": "tcp",
+      "fromPort": 443,
+      "toPort": 443,
+      "type": "inbound"
+    },
+    {
+      "cidrBlock": "0.0.0.0/0",
+      "protocol": "tcp",
+      "fromPort": 80,
+      "toPort": 80,
+      "type": "inbound"
+    },
+    {
+      "cidrBlock": "local-private-network",
+      "protocol": "tcp",
+      "fromPort": 30500,
+      "toPort": 32500,
+      "type": "inbound"
+    },
+    {
+      "cidrBlock": "0.0.0.0/0",
+      "protocol": "tcp",
+      "fromPort": 0,
+      "toPort": 65535,
+      "type": "outbound"
+    },
+    {
+      "cidrBlock": "0.0.0.0/0",
+      "protocol": "tcp",
+      "fromPort": 443,
+      "toPort": 443,
+      "type": "outbound"
+    }
+  ]
+}
