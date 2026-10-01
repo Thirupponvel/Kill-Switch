@@ -1,0 +1,85 @@
+name: CloudHub 2.0 Firewall Control
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Select firewall operation"
+        required: true
+        type: choice
+        options:
+          - normal
+          - kill-switch
+
+jobs:
+
+  firewall-control:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ========================================================
+      # 1. Checkout Repository
+      # ========================================================
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ========================================================
+      # 2. Install Dependencies
+      # ========================================================
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+
+      # ========================================================
+      # 3. Execute Firewall Control
+      # ========================================================
+
+      - name: Execute Firewall Control
+        env:
+
+          # ----------------------------------------------------
+          # Connected App
+          # ----------------------------------------------------
+
+          ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
+          ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
+
+          # ----------------------------------------------------
+          # CloudHub 2.0 Private Space
+          # ----------------------------------------------------
+
+          ANYPOINT_ORG_ID: ${{ secrets.ANYPOINT_ORG_ID }}
+          ANYPOINT_PRIVATE_SPACE_ID: ${{ secrets.ANYPOINT_PRIVATE_SPACE_ID }}
+
+          # ----------------------------------------------------
+          # Firewall JSON
+          # ----------------------------------------------------
+
+          NORMAL_FIREWALL_JSON: ${{ vars.NORMAL_FIREWALL_JSON }}
+          KILL_SWITCH_FIREWALL_JSON: ${{ vars.KILL_SWITCH_FIREWALL_JSON }}
+
+        run: |
+
+          chmod +x scripts/cloudhub_firewall_control.sh
+
+          ./scripts/cloudhub_firewall_control.sh "${{ inputs.mode }}"
+
+      # ========================================================
+      # 4. Upload Kill-Switch Backup
+      #    ONLY WHEN MODE = kill-switch
+      # ========================================================
+
+      - name: Upload Kill-Switch Backup
+        if: ${{ inputs.mode == 'kill-switch' }}
+
+        uses: actions/upload-artifact@v4
+
+        with:
+          name: firewall-backup-${{ github.run_number }}
+          path: backups/
+          retention-days: 90
