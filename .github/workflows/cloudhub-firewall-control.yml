@@ -1,4 +1,4 @@
-name: CloudHub 2.0 Firewall Control
+name: CloudHub 2.0 Firewall Control V2
 
 on:
   workflow_dispatch:
